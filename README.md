@@ -34,6 +34,7 @@ Las tecnologías involucradas son:
 - Jupyter Notebooks para presentar el informe de manera interactiva.
 
 ## Instalación
+Este proyecto funciona con Python 3.10.10.
 
 Se proporciona un archivo `requirements.txt` con todas las bibliotecas de Python necesarias para ejecutar este proyecto. Para instalar las dependencias, ejecuta:
 
