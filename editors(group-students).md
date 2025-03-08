@@ -1,6 +1,6 @@
-# Autors
+# Editores
 ## Evidencia de aprendizaje 1
-### Autores
+### Estudiantes
 **Miguel Leal**
 **Yamith Castaño**
 **Darwin Felix**
@@ -15,6 +15,6 @@ Proyecto Integrado IV - Integración de Información
 Sharon Karin Camacho
 
 ### Fecha
-Marzo 2 de 2025
+Marzo 9 de 2025
 
 ### Institución Universitaria Digital de Antioquia
