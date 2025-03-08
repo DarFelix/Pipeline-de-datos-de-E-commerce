@@ -10,7 +10,7 @@ def temp() -> DataFrame:
     """
     return read_csv("data/temperature.csv")
 
-def get_public_holidays(public_holidays_url: str, year: str) -> DataFrame:
+def get_public_holidays(public_holidays_url: str, year: str, code_country: str) -> DataFrame:
     """Get the public holidays for the given year for Brazil.
     Args:
         public_holidays_url (str): url to the public holidays.
@@ -28,7 +28,7 @@ def get_public_holidays(public_holidays_url: str, year: str) -> DataFrame:
     # Debes lanzar SystemExit si la solicitud falla. Investiga el método raise_for_status
     # de la biblioteca requests.
 
-    response = requests.get(f"{public_holidays_url}/{year}/BR")
+    response = requests.get(f"{public_holidays_url}/{year}/{code_country}")
     try:
         response.raise_for_status()
         df = read_json(response.text)
@@ -40,7 +40,11 @@ def get_public_holidays(public_holidays_url: str, year: str) -> DataFrame:
 
 
 def extract(
-    csv_folder: str, csv_table_mapping: Dict[str, str], public_holidays_url: str
+    csv_folder: str, 
+    csv_table_mapping: Dict[str, str], 
+    public_holidays_url: str,
+    year: str,
+    code_country: str
 ) -> Dict[str, DataFrame]:
     """Extract the data from the csv files and load them into the dataframes.
     Args:
@@ -56,9 +60,7 @@ def extract(
         table_name: read_csv(f"{csv_folder}/{csv_file}")
         for csv_file, table_name in csv_table_mapping.items()
     }
-
-    holidays = get_public_holidays(public_holidays_url, "2017")
-
+    holidays = get_public_holidays(public_holidays_url, year, code_country)
     dataframes["public_holidays"] = holidays
 
     return dataframes
