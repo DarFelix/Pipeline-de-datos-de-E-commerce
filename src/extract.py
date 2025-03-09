@@ -1,7 +1,9 @@
 from typing import Dict, List
 
 import requests
-from pandas import DataFrame, read_csv, read_json, to_datetime, concat
+import io
+import sys
+from pandas import DataFrame, read_csv, read_json, to_datetime, concat, errors
 
 def temp() -> DataFrame:
     """Get the temperature data.
@@ -34,7 +36,7 @@ def get_public_holidays(public_holidays_url: str, year: str, code_country: str) 
         #si se obtiene un código de error, el flujo salta al except.
         response.raise_for_status()
         #se convierte el json de la respuesta en un dataframe
-        df = read_json(response.text)
+        df = read_json(io.StringIO(response.text))
         #se convierte la columna date a tipo fecha
         df["date"] = to_datetime(df["date"])
         #se eliminan las columnas no necesarias
@@ -42,9 +44,25 @@ def get_public_holidays(public_holidays_url: str, year: str, code_country: str) 
         #se devuelve el dataframe
         return df
     except requests.exceptions.HTTPError as err:
-        #si ocurre un error en raise_for_status() se captura y se imprime el 
-        #error, terminando la ejecución
-        raise SystemExit(err)
+        # Manejo específico para errores HTTP (4xx o 5xx)
+        print(f"Error HTTP al conectar con la API: {err}", file=sys.stderr)
+        raise SystemExit(1)
+    except requests.exceptions.RequestException as e:
+        # Manejo para otros errores de red (conexión, DNS, etc.)
+        print(f"Error de red al conectar con la API: {e}", file=sys.stderr)
+        raise SystemExit(1)
+    except ValueError as e:
+        print(f"Error en los datos de la API: {e}", file=sys.stderr)
+        raise SystemExit(1)
+    except errors.ParserError as e:
+        print(f"Error al procesar la respuesta de la API: {e}", file=sys.stderr)
+        raise SystemExit(1)
+    except KeyError as e:
+        print(f"Error en la estructura de la respuesta de la API: clave faltante {e}", file=sys.stderr)
+        raise SystemExit(1)
+    except Exception as e:
+        print(f"Error inesperado al obtener los días festivos: {e}", file=sys.stderr)
+        raise SystemExit(1)
 
 
 def extract(
