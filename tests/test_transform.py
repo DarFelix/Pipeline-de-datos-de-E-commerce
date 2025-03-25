@@ -1,6 +1,6 @@
 import pandas as pd
 from pytest import fixture
-from src.config import QUERY_RESULTS_ROOT_PATH, DATASET_ROOT_PATH, PUBLIC_HOLIDAYS_URL, YEAR_QUERY, CODE_COUNTRY
+from src.config import QUERY_RESULTS_ROOT_PATH, DATASET_ROOT_PATH, PUBLIC_HOLIDAYS_URL, YEARS_QUERY, CODE_COUNTRY
 from sqlalchemy import create_engine
 from sqlalchemy.engine.base import Engine
 import json
@@ -47,7 +47,7 @@ def database() -> Engine:
     csv_folder = DATASET_ROOT_PATH
     public_holidays_url = PUBLIC_HOLIDAYS_URL
     csv_table_mapping = get_csv_to_table_mapping()
-    year = YEAR_QUERY
+    year = YEARS_QUERY
     code_country = CODE_COUNTRY
     csv_dataframes = extract(csv_folder, csv_table_mapping, public_holidays_url, year, code_country)
     load(data_frames=csv_dataframes, database=engine)
