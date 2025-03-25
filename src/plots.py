@@ -1,8 +1,10 @@
 import matplotlib
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 
 import plotly.express as px
 import seaborn as sns
+import pandas as pd
 
 from pandas import DataFrame
 
@@ -182,7 +184,15 @@ def plot_freight_value_weight_relationship(df: DataFrame):
     # TODO: Representar gráficamente la relación entre el valor del flete y el peso usando un scatterplot de seaborn.
     # El eje x debe ser el peso (weight) y el eje y debe ser el valor del flete (freight value).
 
-    raise NotImplementedError
+    sns.scatterplot(x='product_weight_g', y='freight_value', data=df)
+
+    # Añadir etiquetas y título
+    plt.xlabel('Peso del Producto (g)')
+    plt.ylabel('Valor del Flete')
+    plt.title('Relación entre Peso del Producto y Valor del Flete')
+
+    # Mostrar el gráfico
+    plt.show()
 
 
 def plot_delivery_date_difference(df: DataFrame):
@@ -206,4 +216,33 @@ def plot_order_amount_per_day_with_holidays(df: DataFrame):
     # Marcar los días festivos con líneas verticales.
     # Sugerencia: usar plt.axvline.
 
-    raise NotImplementedError
+     # Configuración del gráfico
+    plt.figure(figsize=(15, 6))
+
+    # Convertir las fechas a objetos datetime
+    df['date'] = pd.to_datetime(df['date'])
+    dates = df['date']
+
+    plt.plot(dates, df['order_count'], label='Número de Pedidos', color='blue')
+
+    # Graficar líneas verticales para días festivos
+    for i, (date, is_holiday) in enumerate(zip(dates, df['holiday'])):
+        if is_holiday:
+            plt.axvline(x=date, color='red', linestyle='--', alpha=0.5)
+
+    # Configuraciones del eje x
+    plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
+    plt.gca().xaxis.set_major_locator(mdates.MonthLocator())
+    plt.gcf().autofmt_xdate()  # Rotar y alinear las etiquetas de fecha
+
+    # Títulos y etiquetas
+    plt.title('Número de Pedidos por Día (2017)', fontsize=15)
+    plt.xlabel('Fecha', fontsize=12)
+    plt.ylabel('Número de Pedidos', fontsize=12)
+    plt.legend()
+
+    # Mostrar cuadrícula
+    plt.grid(True, linestyle='--', alpha=0.7)
+
+    plt.tight_layout()
+    plt.show()
