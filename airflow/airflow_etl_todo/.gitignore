@@ -1,0 +1,2 @@
+# Ignorar archivos compilados y caché de Python
+__pycache__/
